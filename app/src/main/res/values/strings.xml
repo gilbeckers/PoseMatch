@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">PoseMatch</string>
+    <string name="take_picture">Take picture</string>
+    <string name="title_activity_choose_model_pose">ChooseModelPose</string>
+</resources>
