@@ -2,4 +2,21 @@
     <string name="app_name">PoseMatch</string>
     <string name="take_picture">Take picture</string>
     <string name="title_activity_choose_model_pose">ChooseModelPose</string>
+    <string name="title_activity_log_in">LogInActivity</string>
+    <string name="password_hint">Password</string>
+    <string name="email_hint">Email</string>
+    <string name="sign_up_button_label">Sign Up</string>
+    <string name="signup_error_message">Please make sure you enter an email address and password!</string>
+    <string name="signup_error_title">Error!</string>
+    <string name="signup_success">Account successfully created! You can now Login.</string>
+    <string name="login_error_message">Please make sure you enter an email address and password!</string>
+    <string name="login_error_title">Error!</string>
+    <string name="login_button_label">Login</string>
+    <string name="sign_up_text">Sign Up!</string>
+    <string name="title_activity_login">Sign in</string>
+    <string name="add_item">Add New Item</string>
+    <string name="action_logout">Logout</string>
+    <string name="drawer_item_home">drawer_home</string>
+    <string name="drawer_item_settings">drawer_settings</string>
+    <string name="drawer_item_login">drawer_login</string>
 </resources>

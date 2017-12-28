@@ -27,6 +27,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -36,6 +37,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -54,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
     public static final String EXTRA_IMAGE = "INUPUT_IMAGE" ;
     public static final String EXTRA_MODEL_POSE = "MODEL_POSE" ;
     public static final int REQUEST_CODE_MODEL_POSE = 1;
+
+    // https://www.sitepoint.com/creating-a-cloud-backend-for-your-android-app-using-firebase/
+    private FirebaseAuth mFirebaseAuth;
+    private FirebaseUser mFirebaseUser;
 
     private Button takePictureButton;
     private TextureView textureView;
@@ -80,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
     private boolean mFlashSupported;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
+    private Toolbar myToolbar;
 
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
@@ -116,10 +132,58 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        List<Point2D> A = Arrays.asList(new Point2D(1, 1), new Point2D(5, 7));
-        List<Point2D> B = Arrays.asList(new Point2D(8, 11), new Point2D(8, 9));
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
 
-        Log.d(TAG, (AffineTransformation.e(AffineTransformation.t(A, AffineTransformation.r(A, B)), B) < 0.000001d ? "SUCCESS" : "FAIL"));
+        initDrawer();
+
+
+
+        //List<Point2D> A = Arrays.asList(new Point2D(1, 1), new Point2D(5, 7));
+        //List<Point2D> B = Arrays.asList(new Point2D(8, 11), new Point2D(8, 9));
+        //Log.d(TAG, (AffineTransformation.e(AffineTransformation.t(A, AffineTransformation.r(A, B)), B) < 0.000001d ? "SUCCESS" : "FAIL"));
+
+
+    }
+
+    private void initDrawer() {
+        //if you want to update the items at a later time it is recommended to keep it in a variable
+        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.drawer_item_home);
+        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName(R.string.drawer_item_settings);
+        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName(R.string.drawer_item_login);
+        //SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName(R.string.drawer_item_settings);
+
+//create the drawer and remember the `Drawer` result object
+        Drawer result = new DrawerBuilder()
+                .withActivity(this)
+                .withToolbar(myToolbar)
+                .addDrawerItems(
+                        item1,
+                        item2,
+                        item3,
+                        new DividerDrawerItem()
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        Log.e(TAG, "##clicked position:  " + position);
+
+                        if(drawerItem.getIdentifier() == 3){
+                            //Login
+                            // Initialize Firebase Auth
+                            mFirebaseAuth = FirebaseAuth.getInstance();
+                            mFirebaseUser = mFirebaseAuth.getCurrentUser();
+
+                            if (mFirebaseUser == null) {
+                                // Not logged in, launch the Log In activity
+                                loadLogInView();
+                            }
+                        }
+
+                        return true;
+                    }
+                })
+                .build();
     }
 
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
@@ -322,6 +386,17 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ChooseModelPose.class);
         //startActivity(intent);
         startActivityForResult(intent, REQUEST_CODE_MODEL_POSE);
+    }
+
+    private void loadLogInView() {
+        // Navigates to the Login view and clears the activity stack.
+        // This prevents the user going back to the main activity
+        // when they press the Back button from the login view.
+        // TODO: mss probleem voor camera view?
+        Intent intent = new Intent(this, LogInActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

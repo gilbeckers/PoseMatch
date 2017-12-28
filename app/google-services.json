@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "485265702175",
+    "firebase_url": "https://posematch.firebaseio.com",
+    "project_id": "posematch",
+    "storage_bucket": "posematch.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:485265702175:android:d00667ed1c977d28",
+        "android_client_info": {
+          "package_name": "com.gil.posematch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "485265702175-lac5v3kq7u443lhbu76gf3gqco46srlj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_BkgBNZrWOhUeSdUjUxDNyoekbXMD8GI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
