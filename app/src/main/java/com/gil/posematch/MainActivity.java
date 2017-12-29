@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
@@ -40,12 +41,18 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.mikepenz.fontawesome_typeface_library.FontAwesome;
+import com.mikepenz.materialdrawer.AccountHeader;
+import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.holder.BadgeStyle;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -135,55 +142,9 @@ public class MainActivity extends AppCompatActivity {
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-        initDrawer();
+        DrawerUtil.getDrawer(this, myToolbar);
 
 
-
-        //List<Point2D> A = Arrays.asList(new Point2D(1, 1), new Point2D(5, 7));
-        //List<Point2D> B = Arrays.asList(new Point2D(8, 11), new Point2D(8, 9));
-        //Log.d(TAG, (AffineTransformation.e(AffineTransformation.t(A, AffineTransformation.r(A, B)), B) < 0.000001d ? "SUCCESS" : "FAIL"));
-
-
-    }
-
-    private void initDrawer() {
-        //if you want to update the items at a later time it is recommended to keep it in a variable
-        PrimaryDrawerItem item1 = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.drawer_item_home);
-        PrimaryDrawerItem item2 = new PrimaryDrawerItem().withIdentifier(2).withName(R.string.drawer_item_settings);
-        PrimaryDrawerItem item3 = new PrimaryDrawerItem().withIdentifier(3).withName(R.string.drawer_item_login);
-        //SecondaryDrawerItem item2 = new SecondaryDrawerItem().withIdentifier(2).withName(R.string.drawer_item_settings);
-
-//create the drawer and remember the `Drawer` result object
-        Drawer result = new DrawerBuilder()
-                .withActivity(this)
-                .withToolbar(myToolbar)
-                .addDrawerItems(
-                        item1,
-                        item2,
-                        item3,
-                        new DividerDrawerItem()
-                )
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        Log.e(TAG, "##clicked position:  " + position);
-
-                        if(drawerItem.getIdentifier() == 3){
-                            //Login
-                            // Initialize Firebase Auth
-                            mFirebaseAuth = FirebaseAuth.getInstance();
-                            mFirebaseUser = mFirebaseAuth.getCurrentUser();
-
-                            if (mFirebaseUser == null) {
-                                // Not logged in, launch the Log In activity
-                                loadLogInView();
-                            }
-                        }
-
-                        return true;
-                    }
-                })
-                .build();
     }
 
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
@@ -220,6 +181,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
     protected void takePicture() {
         if(null == cameraDevice) {
             Log.e(TAG, "cameraDevice is null");
@@ -388,16 +350,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_CODE_MODEL_POSE);
     }
 
-    private void loadLogInView() {
-        // Navigates to the Login view and clears the activity stack.
-        // This prevents the user going back to the main activity
-        // when they press the Back button from the login view.
-        // TODO: mss probleem voor camera view?
-        Intent intent = new Intent(this, LogInActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
+
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -452,5 +405,13 @@ public class MainActivity extends AppCompatActivity {
         //closeCamera();
         stopBackgroundThread();
         super.onPause();
+    }
+
+    public FirebaseAuth getmFirebaseAuth() {
+        return mFirebaseAuth;
+    }
+
+    public FirebaseUser getmFirebaseUser() {
+        return mFirebaseUser;
     }
 }
